@@ -22,15 +22,19 @@ from modbus_tk import modbus_rtu
 PORT = '/dev/ttyUSB0'
 
 def main():
+    defaultEmail = "localizedleakdetector@gmail.com"
     #logger = modbus_tk.utils.create_logger("console")
     while True:
         try:
+            sleep(2)
             humidity = 1
             water = 1
             temp = 1
             data = ''
             if sys.argv[1:]:
-                email = sys.argv[1:]
+                email = sys.argv[1]
+            else:
+                email = defaultEmail
             #Connect to the slave
             master = modbus_rtu.RtuMaster(serial.Serial(port=PORT, baudrate=9600, bytesize=8, parity='N', stopbits=1, xonxoff=0))
             master.set_timeout(5.0)
@@ -44,9 +48,9 @@ def main():
             print("Water: " + str(water) + "\tHumidity: " + str(humidity))
             if(humidity>80 or water>100):
                 print("Leak Detected!")
-                print("Alert sent via email")
+                print("Alert sent via email to "+email)
                 print("Waiting for sensor readings to return to normal...")
-                mailsend.sendLeakAlertEmail("jkzq62@mst.edu", 1)
+                mailsend.sendLeakAlertEmail(email,1)
                 while(humidity>70 or water>100):
                     data = master.execute(1, cst.READ_INPUT_REGISTERS, 0, 3)
                     humidity = data[1]
@@ -60,6 +64,5 @@ def main():
                 data = master.execute(1,cst.READ_INPUT_REGISTERS, 0, 3)
             except modbus_tk.modbus.ModbusError as exc:
                 logger.error("%s- Code=%d", exc, exc.get_exception_code())
-        sleep(2)
 if __name__ == "__main__":
     main()

@@ -5,30 +5,26 @@
 # usage: mailsend.py "Destination email" nodeid or import mailsend to use func
 import smtplib
 import sys
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 def sendLeakAlertEmail(email, node):
     user = 'localizedleakdetector@gmail.com'
     pwd = 'leakdetectpwd'
     sent_from = user
     to = email
-    subject = 'LeakTest'
-    body = 'A leak has been detected at the following Node ID: '+str(node)
-    email_body = """\
-        From: %s
-        To: %s
-        Subject: %s
-        %s
-        """ % (sent_from, to, subject, body)
-
+    msg = MIMEMultipart()
+    msg['From'] = sent_from
+    msg['To'] = to
+    msg['Subject'] = "Leak Detected"
+    body = "A leak has been detected at the node with the following ID: " + str(node)
+    msg.attach(MIMEText(body,'plain'))
+    text = msg.as_string()
     try:
         s = smtplib.SMTP('smtp.gmail.com', 587)
         s.starttls()
         s.login(user,pwd)
-        s.sendmail(user,to,email_body)
+        s.sendmail(user,to,text)
         s.quit()
-        print 'Email sent!'
     except:
         print 'Email could not be sent'
-sendto = str(sys.argv[1]) if len(sys.argv) > 1 else "localizedleakdetector@gmail.com"
-n = str(sys.argv[2]) if len(sys.argv) > 1 else "Node ID Error"
-sendLeakAlertEmail(sendto,n)
