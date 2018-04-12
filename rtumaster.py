@@ -31,6 +31,8 @@ def main():
             water = 1
             temp = 1
             data = ''
+            nodeArray = [1, 2]
+            i = 0
             if sys.argv[1:]:
                 email = sys.argv[1]
             else:
