@@ -24,21 +24,22 @@ PORT = '/dev/ttyUSB0'
 def main():
     defaultEmail = "localizedleakdetector@gmail.com"
     #logger = modbus_tk.utils.create_logger("console")
+
     while True:
-        try:
-            sleep(2)
-            humidity = 1
-            water = 1
-            temp = 1
-            data = ''
-            nodeArray = [1]
-            i = 0
-            while i < len(nodeArray):
-                if sys.argv[1:]:
-                    email = sys.argv[1]
-                else:
-                    email = defaultEmail
-                #Connect to the slave
+        nodeArray = [1]
+        i = 0
+        sleep(2)
+        humidity = 1
+        water = 1
+        temp = 1
+        data = ''
+        while i < len(nodeArray):
+            if sys.argv[1:]:
+                email = sys.argv[1]
+            else:
+                email = defaultEmail
+            #Connect to the slave
+            try:
                 master = modbus_rtu.RtuMaster(serial.Serial(port=PORT, baudrate=9600, bytesize=8, parity='N', stopbits=1, xonxoff=0))
                 master.set_timeout(5.0)
                 master.set_verbose(False)
@@ -62,11 +63,12 @@ def main():
                         sleep(2)
                         print("..")
                     print("Sensor readings returned to average")
+            except modbus_tk.modbus.ModbusError as exc:
+                logger.error("%s- Code=%d", exc, exc.get_exception_code())
+                try:
+                    data = master.execute(i,cst.READ_INPUT_REGISTERS, 0, 3)
                 except modbus_tk.modbus.ModbusError as exc:
                     logger.error("%s- Code=%d", exc, exc.get_exception_code())
-                    try:
-                        data = master.execute(i,cst.READ_INPUT_REGISTERS, 0, 3)
-                    except modbus_tk.modbus.ModbusError as exc:
-                        logger.error("%s- Code=%d", exc, exc.get_exception_code())
+            i += 1
 if __name__ == "__main__":
     main()
