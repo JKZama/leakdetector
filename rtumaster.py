@@ -31,7 +31,7 @@ def main():
             water = 1
             temp = 1
             data = ''
-            nodeArray = [1, 2]
+            nodeArray = [1]
             i = 0
             while i < len(nodeArray):
                 if sys.argv[1:]:
@@ -62,11 +62,11 @@ def main():
                         sleep(2)
                         print("..")
                     print("Sensor readings returned to average")
-            except modbus_tk.modbus.ModbusError as exc:
-                logger.error("%s- Code=%d", exc, exc.get_exception_code())
-                try:
-                    data = master.execute(i,cst.READ_INPUT_REGISTERS, 0, 3)
                 except modbus_tk.modbus.ModbusError as exc:
                     logger.error("%s- Code=%d", exc, exc.get_exception_code())
+                    try:
+                        data = master.execute(i,cst.READ_INPUT_REGISTERS, 0, 3)
+                    except modbus_tk.modbus.ModbusError as exc:
+                        logger.error("%s- Code=%d", exc, exc.get_exception_code())
 if __name__ == "__main__":
     main()
