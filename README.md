@@ -1,6 +1,7 @@
 # Localized Leak Detector
 This project is for the 4096/4097 CpE/EE courses at Missouri University of Science & Technology.
 All libraries used are under an LGPL or less restrictive license.
+- by Jesse Zamazanuk, Aaron Harmon, Julia White, Cory Moore
 
 Main node software is designed to be tested and run on a Raspberry Pi 3 Model B
 Sensor node sofware is designed to be tested and run on an Arduino Uno R3
