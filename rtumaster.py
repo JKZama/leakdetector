@@ -54,7 +54,7 @@ def main():
                 print("Node " + str(nodeArray[i-1]))
                 print("Water: " + str(water) + "\tHumidity: " + str(humidity))
                 mqttc = mqtt.Client("python_pub")
-                mqttc.connect("test.mosquitto.org", 1883)
+                mqttc.connect("131.151.103.157", 1883)
                 mqttc.publish("hello", "Hello!")
                 mqttc.loop(2)
                 if(humidity>80 or water>100):
