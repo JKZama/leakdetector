@@ -56,7 +56,7 @@ def main():
                 humidity = data[1]
                 temp = data[2]
                 print("Node " + str(nodeArray[i-1]))
-                print("Water: " + str(water) + "\tHumidity: " + str(humidity))
+                print("Water: " + str(water) + "\tHumidity: " + str(humidity) + "\tTemperature: " + str(temp))
                 mqttc = mqtt.Client("python_pub")
                 mqttc.connect("131.151.103.157", 1883)
                 mqttc.publish("hello", "Hello!")
@@ -71,7 +71,7 @@ def main():
                         humidity = data[1]
                         water = data[2]
                         sleep(2)
-                        print("..")
+                        print("Water: " + str(water) + "\tHumidity: " + str(humidity) + "\tTemperature: " + str(temp))
                     print("Sensor readings returned to average")
             except modbus_tk.modbus.ModbusError as exc:
                 GPIO.output(mypin, 1)
