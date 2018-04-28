@@ -18,6 +18,7 @@ import modbus_tk
 import modbus_tk.defines as cst
 from modbus_tk import modbus_rtu
 
+import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
 #PORT = 1
@@ -34,6 +35,9 @@ def main():
         water = 1
         temp = 1
         data = ''
+        GPIO.setmode(GPIO.BOARD)
+        mypin = 12
+        GPIO.setup(mypin, GPIO.OUT, initial = 0)
         while i < len(nodeArray)+1:
             sleep(2)
             if sys.argv[1:]:
@@ -70,6 +74,9 @@ def main():
                         print("..")
                     print("Sensor readings returned to average")
             except modbus_tk.modbus.ModbusError as exc:
+                GPIO.output(mypin, 1)
+                sleep(2)
+                GPIO.output(mypin, 0)
                 logger.error("%s- Code=%d", exc, exc.get_exception_code())
                 try:
                     data = master.execute(nodeArray[i-1],cst.READ_INPUT_REGISTERS, 0, 3)
